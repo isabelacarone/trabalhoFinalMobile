@@ -1,19 +1,18 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; 
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import theme from '../styles/theme';
 
 export default function SessionsHistory() {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Histórico de Sessões</Text>
-      <Button 
-        title="Voltar para o Timer" 
-        color={theme.colors.primary} 
-        onPress={() => navigation.navigate('Timer')} 
-      />
+
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Timer')}>
+        <Text style={styles.buttonText}>Voltar para o Timer</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -29,5 +28,19 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: theme.colors.primary,
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
