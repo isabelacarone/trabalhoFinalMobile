@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; 
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import theme from '../styles/theme';
 
 export default function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
-  const handleSignup = () => {
-    // Implementar lógica de cadastro
-    console.log('Cadastro:', username, password);
+  const handleSignup = async () => {
+    try {
+      // Verificando se o usuário já existe
+      const response = await fetch(`https://6732862d2a1b1a4ae1102d5f.mockapi.io/users?username=${username}`);
+      const users = await response.json();
+
+      if (users.length > 0) {
+        Alert.alert('Erro', 'Usuário já cadastrado!');
+      } else {
+        // Criando o novo usuário na API
+        await fetch('https://6732862d2a1b1a4ae1102d5f.mockapi.io/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao conectar com a API.');
+    }
   };
 
   return (
@@ -67,8 +87,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 12,
-    width: '80%', // Alinhamento com o campo de entrada
-    alignItems: 'center', // Centraliza o texto no botão
+    width: '80%', 
+    alignItems: 'center', 
   },
   buttonText: {
     color: '#fff',

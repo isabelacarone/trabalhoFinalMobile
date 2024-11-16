@@ -1,15 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import theme from '../styles/theme';
 
 export default function Login({ navigation }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleLogin = async () => {
+    setErrorMessage('');
+    try {
+      const response = await fetch(`https://6732862d2a1b1a4ae1102d5f.mockapi.io/users?username=${username}`);
+      const users = await response.json();
+
+      if (users.length > 0) {
+        const user = users[0];
+        if (user.password === password) {
+          navigation.navigate('Timer');
+        } else {
+          setErrorMessage('Senha incorreta, tente novamente.');
+        }
+      } else {
+        setErrorMessage('Esse usuário ainda não está cadastrado.');
+      }
+    } catch (error) {
+      setErrorMessage('Erro ao conectar com a API.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/logo.png')} style={styles.logo} />
       <Text style={styles.title}>Pomodoro</Text>
-      <TextInput style={styles.input} placeholder="E-mail" />
-      <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Timer')}>
+      <TextInput 
+        style={styles.input} 
+        placeholder="E-mail" 
+        value={username} 
+        onChangeText={setUsername} 
+      />
+      <TextInput 
+        style={styles.input} 
+        placeholder="Senha" 
+        secureTextEntry 
+        value={password} 
+        onChangeText={setPassword} 
+      />
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
       <Text style={styles.signupText}>
@@ -51,13 +88,17 @@ const styles = StyleSheet.create({
     width: '80%',
     paddingHorizontal: 10,
   },
+  errorText: {
+    color: theme.colors.primary,
+    marginBottom: 12,
+  },
   button: {
     backgroundColor: theme.colors.primary,
     padding: 10,
     borderRadius: 5,
     marginBottom: 12,
-    width: '80%', // Garantindo que o botão tenha uma largura adequada
-    alignItems: 'center', // Centraliza o texto no botão
+    width: '80%', 
+    alignItems: 'center', 
   },
   buttonText: {
     color: '#fff',

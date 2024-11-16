@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import theme from '../styles/theme';
 
 export default function Timer({ route }) {
-  const { studyTime = 1500, breakTime = 300 } = route.params || {}; // Padrão para 25min e 5min
+  const { studyTime = 1500, breakTime = 300 } = route.params || {}; // Padrão para 25 min e 5 min
   const [studySeconds, setStudySeconds] = useState(studyTime); // Tempo de estudo
   const [breakSeconds, setBreakSeconds] = useState(breakTime); // Tempo de pausa
   const [isStudyRunning, setIsStudyRunning] = useState(false); // Controle do cronômetro de estudo

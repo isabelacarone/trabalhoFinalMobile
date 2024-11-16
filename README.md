@@ -27,7 +27,7 @@ A técnica Pomodoro é baseada na ideia de dividir o trabalho em intervalos de t
 - _[isacaronelacerda@gmail.com]_
 - _[Sistemas de informação, 3° período]_
 - **Maria Clara Moura**
-- _[]_
+- _[mcestevanovic@gmail.com]_
 - _[Ciência da computação, 4° período]_
 
 
