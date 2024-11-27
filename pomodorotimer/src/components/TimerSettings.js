@@ -17,6 +17,11 @@ export default function TimerSettings({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Botão de Voltar */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Configurações do Timer</Text>
 
       <View style={styles.inputContainer}>
@@ -42,10 +47,6 @@ export default function TimerSettings({ route, navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Salvar Configurações</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonText}>Voltar para o Timer</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -57,6 +58,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.background,
     paddingHorizontal: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+  },
+  backButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   title: {
     fontSize: 32,
