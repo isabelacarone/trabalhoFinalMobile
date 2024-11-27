@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Keyboard } from 'react-native';
 import theme from '../styles/theme';
 
 export default function Login({ navigation }) {
@@ -16,6 +16,7 @@ export default function Login({ navigation }) {
       if (users.length > 0) {
         const user = users[0];
         if (user.password === password) {
+          Keyboard.dismiss(); // Fecha o teclado
           navigation.navigate('Timer');
         } else {
           setErrorMessage('Senha incorreta, tente novamente.');
@@ -37,6 +38,8 @@ export default function Login({ navigation }) {
         placeholder="E-mail" 
         value={username} 
         onChangeText={setUsername} 
+        returnKeyType="next" 
+        onSubmitEditing={() => Keyboard.dismiss()} // Avança para o próximo campo
       />
       <TextInput 
         style={styles.input} 
@@ -44,6 +47,8 @@ export default function Login({ navigation }) {
         secureTextEntry 
         value={password} 
         onChangeText={setPassword} 
+        returnKeyType="done" 
+        onSubmitEditing={handleLogin} // Chama o login ao pressionar Enter
       />
       {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
