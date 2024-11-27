@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from '../styles/theme';
 
 export default function Timer({ route }) {
@@ -31,6 +32,25 @@ export default function Timer({ route }) {
     return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
   }, [isStudyRunning, isBreakRunning, studySeconds, breakSeconds]);
 
+  // Função para salvar a sessão no AsyncStorage
+  const saveSession = async (type, duration) => {
+    try {
+      const newSession = {
+        type, // Tipo de sessão (Estudo ou Pausa)
+        duration, // Duração inicial em minutos
+        completedAt: new Date().toLocaleString(), // Data/hora da ativação
+      };
+
+      const storedSessions = await AsyncStorage.getItem('@sessions_history');
+      const sessions = storedSessions ? JSON.parse(storedSessions) : [];
+      sessions.push(newSession);
+
+      await AsyncStorage.setItem('@sessions_history', JSON.stringify(sessions));
+    } catch (error) {
+      console.error('Erro ao salvar a sessão:', error);
+    }
+  };
+
   // Formatação do tempo
   const formatTime = seconds => {
     const minutes = Math.floor(seconds / 60);
@@ -42,16 +62,18 @@ export default function Timer({ route }) {
 
   // Iniciar/pausar o cronômetro de estudo
   const toggleStudyTimer = () => {
-    if (studySeconds > 0) {
-      setIsStudyRunning(!isStudyRunning);
+    if (studySeconds > 0 && !isStudyRunning) {
+      saveSession('Estudo', studyTime / 60); // Salva a sessão no início
     }
+    setIsStudyRunning(!isStudyRunning);
   };
 
   // Iniciar/pausar o cronômetro de pausa
   const toggleBreakTimer = () => {
-    if (breakSeconds > 0) {
-      setIsBreakRunning(!isBreakRunning);
+    if (breakSeconds > 0 && !isBreakRunning) {
+      saveSession('Pausa', breakTime / 60); // Salva a sessão no início
     }
+    setIsBreakRunning(!isBreakRunning);
   };
 
   // Reiniciar os cronômetros
@@ -83,13 +105,22 @@ export default function Timer({ route }) {
 
       {/* Botões no Rodapé */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('TimerSettings', { studyTime, breakTime })}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('TimerSettings', { studyTime, breakTime })}
+        >
           <Text style={styles.buttonText}>Configurações</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('SessionsHistory')}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('SessionsHistory')}
+        >
           <Text style={styles.buttonText}>Histórico</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('UserProfile')}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('UserProfile')}
+        >
           <Text style={styles.buttonText}>Perfil</Text>
         </TouchableOpacity>
       </View>
