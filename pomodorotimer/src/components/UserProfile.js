@@ -6,18 +6,16 @@ import theme from '../styles/theme';
 export default function UserProfile() {
   const navigation = useNavigation();
 
-  // Dados fictícios para ilustrar o perfil
   const user = {
     name: "Random User",
     email: "email@email.com",
     profilePicture: "https://randomuser.me/api/portraits/women/44.jpg",
     studySessions: 45,
-    totalStudyTime: 1230, // em minutos
+    totalStudyTime: 1230,
     breakSessions: 15,
-    totalBreakTime: 300, // em minutos
+    totalBreakTime: 300,
   };
 
-  // Formatação do tempo (em minutos para exibição)
   const formatTime = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -26,45 +24,24 @@ export default function UserProfile() {
 
   return (
     <View style={styles.container}>
-      {/* Foto de perfil */}
-      <Image source={{ uri: user.profilePicture }} style={styles.profileImage} />
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Timer')}>
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </TouchableOpacity>
 
-      {/* Nome do usuário */}
+      <Image source={{ uri: user.profilePicture }} style={styles.profileImage} />
       <Text style={styles.name}>{user.name}</Text>
-      
-      {/* Email do usuário */}
       <Text style={styles.email}>{user.email}</Text>
 
       <View style={styles.statsContainer}>
-        {/* Sessões de estudo */}
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Sessões de Estudo</Text>
           <Text style={styles.statValue}>{user.studySessions}</Text>
         </View>
-
-        {/* Tempo total de estudo */}
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Tempo Total de Estudo</Text>
           <Text style={styles.statValue}>{formatTime(user.totalStudyTime)}</Text>
         </View>
-
-        {/* Sessões de pausa */}
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Sessões de Pausa</Text>
-          <Text style={styles.statValue}>{user.breakSessions}</Text>
-        </View>
-
-        {/* Tempo total de pausa */}
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Tempo Total de Pausa</Text>
-          <Text style={styles.statValue}>{formatTime(user.totalBreakTime)}</Text>
-        </View>
       </View>
-
-      {/* Botão para voltar */}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Timer')}>
-        <Text style={styles.buttonText}>Voltar para o Timer</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -78,9 +55,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     marginBottom: 20,
     borderWidth: 2,
     borderColor: theme.colors.primary,
@@ -99,6 +76,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     width: '100%',
     marginBottom: 30,
+    alignItems: 'center',
   },
   statBox: {
     backgroundColor: theme.colors.cardBackground,
@@ -106,6 +84,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 10,
     alignItems: 'center',
+    width: '90%',
   },
   statLabel: {
     fontSize: 18,
@@ -117,16 +96,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
-  button: {
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
     backgroundColor: theme.colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 5,
-    alignItems: 'center',
   },
-  buttonText: {
+  backButtonText: {
     color: '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
