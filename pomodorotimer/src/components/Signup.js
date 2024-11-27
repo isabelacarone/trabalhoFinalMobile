@@ -6,15 +6,17 @@ import theme from '../styles/theme';
 export default function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
 
   const handleSignup = async () => {
     try {
       // Verificando se o usuário já existe
-      const response = await fetch(`https://6732862d2a1b1a4ae1102d5f.mockapi.io/users?username=${username}`);
+      setErrorMessage('Iniciando');
+      const response = await fetch(`https://6732862d2a1b1a4ae1102d5f.mockapi.io/users?username=${username}`);  
       const users = await response.json();
 
-      if (users.length > 0) {
+      if (response.ok) {
         Alert.alert('Erro', 'Usuário já cadastrado!');
       } else {
         // Criando o novo usuário na API
@@ -47,7 +49,7 @@ export default function Signup() {
         placeholder="Senha" 
         secureTextEntry 
         value={password} 
-        onChangeText={setPassword} 
+        onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Cadastrar</Text>
@@ -58,6 +60,7 @@ export default function Signup() {
           Faça login
         </Text>
       </Text>
+      <Text>{errorMessage}</Text>
     </View>
   );
 }
